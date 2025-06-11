@@ -32,12 +32,16 @@ public class CharactersController(IDbService _dbService) : ControllerBase
     {
         try
         {
-            await _dbService.FillBackpack(ids,id);
+            await _dbService.FillBackpack(ids, id);
             return Ok();
         }
         catch (NotFoundException e)
         {
             return NotFound(e.Message);
+        }
+        catch (ConflictException e)
+        {
+            return Conflict(e.Message);
         }
     }
     

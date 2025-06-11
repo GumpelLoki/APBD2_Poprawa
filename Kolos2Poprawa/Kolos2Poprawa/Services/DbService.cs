@@ -50,12 +50,18 @@ public class DbService : IDbService
             if (character == null)
                 throw new NotFoundException($"Character{id} not found");
             var remainingweight = await _context.Characters.Select(e => e.MaxWeight-e.CurrentWeight).SumAsync();
+            int sumweight = 0;
             foreach (int idd in ids)
             {
                 var item =  await _context.Items.FirstOrDefaultAsync(e => e.ItemId == idd);
                 if (item == null)
                     throw new NotFoundException($"Item{id} not found");
+                var itemweight = await _context.Items.Select(e => e.Weight).SumAsync();
+                sumweight += itemweight;
             }
+            if (remainingweight < sumweight)
+                throw new ConflictException("The backpack is full");
+            
                 
         }
         catch (Exception ex)
