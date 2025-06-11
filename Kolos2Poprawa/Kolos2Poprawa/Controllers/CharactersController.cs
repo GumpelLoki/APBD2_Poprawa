@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Kolos2Poprawa.Controllers;
 [Route("api/[controller]")]
 [ApiController]
-public class Controller(IDbService _dbService) : ControllerBase
+public class CharactersController(IDbService _dbService) : ControllerBase
 {
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
@@ -13,8 +13,8 @@ public class Controller(IDbService _dbService) : ControllerBase
         try
         {
             //FIX THIS REMEBER
-            //await _dbService.
-            var result = 5;
+            //
+            var result = await _dbService.GetCharacterItems(id);
             return Ok(result);
         }
         catch (NotFoundException e)
