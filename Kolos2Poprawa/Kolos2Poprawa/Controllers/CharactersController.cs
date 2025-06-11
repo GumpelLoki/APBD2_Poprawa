@@ -26,4 +26,19 @@ public class CharactersController(IDbService _dbService) : ControllerBase
             return BadRequest(e.Message);
         }
     }
+
+    [HttpPut("{id}/backpacks")]
+    public async Task<IActionResult> FillBackpack(List<int> ids, int id)
+    {
+        try
+        {
+            await _dbService.FillBackpack(ids,id);
+            return Ok();
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+    }
+    
 }

@@ -40,4 +40,28 @@ public class DbService : IDbService
             throw new NotFoundException($"Character{id} not found");
         return items;
     }
+
+    public async Task FillBackpack(List<int> ids, int id)
+    {
+        using var transaction = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            var character = await _context.Characters.FirstOrDefaultAsync(e => e.CharacterId == id);
+            if (character == null)
+                throw new NotFoundException($"Character{id} not found");
+            var remainingweight = await _context.Characters.Select(e => e.MaxWeight-e.CurrentWeight).SumAsync();
+            foreach (int idd in ids)
+            {
+                var item =  await _context.Items.FirstOrDefaultAsync(e => e.ItemId == idd);
+                if (item == null)
+                    throw new NotFoundException($"Item{id} not found");
+            }
+                
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
 }
